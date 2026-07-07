@@ -15,12 +15,12 @@ function addTask() {
             tasksContainer.classList.remove('removing');
         }
 
-        tasksContainer.innerHTML += `
+        tasksContainer.insertAdjacentHTML('beforeend', `
             <div class="task">
                 <span class="task-name">${newTaskInput.value}</span>
                 <img class="deleteButton" src="images/remove.png" alt="remove task">
             </div>
-        `;
+        `);
 
 
         newTaskInput.value = '';
@@ -44,28 +44,34 @@ document.addEventListener('keydown', (event) => {
 //  Делегируем обработчик событий
 
 tasksContainer.addEventListener('click', (event) => {
-    if (event.target.classList.contains('deleteButton')) { // обработчик событий для кнопки удаления задачи
+    if (event.target.classList.contains('deleteButton')) {
+
         const taskDiv = event.target.closest('.task');
-
         taskDiv.classList.add('removing');
+        taskDiv.addEventListener('transitionend', onTaskTransitionEnd);
 
-        taskDiv.addEventListener('transitionend', () => {
+        function onTaskTransitionEnd(event) {
+            if (event.target !== taskDiv) return;
+            taskDiv.removeEventListener('transitionend', onTaskTransitionEnd);
+
             taskDiv.remove();
 
             if (tasksContainer.children.length == 0) {
                 tasksContainer.classList.add('removing');
+                tasksContainer.addEventListener('transitionend', onContainerTransitionEnd);
 
-                tasksContainer.addEventListener('transitioned', () => {
+                function onContainerTransitionEnd(e) {
+                    if (e.target !== tasksContainer) return;
+
+                    tasksContainer.removeEventListener('transitionend', onContainerTransitionEnd);
                     tasksContainer.style.display = 'none';
-                })
+                }
             }
-        }, { once: true });
-
+        }
     }
 
-    if (event.target.classList.contains('task-name')) { // обработчик событий для task-name строки
+    if (event.target.classList.contains('task-name')) {
         event.target.classList.toggle('completed');
     }
-
-})
+});
 
