@@ -9,6 +9,12 @@ function addTask() {
     }
 
     else {
+
+        if (tasksContainer.children.length == 0) {
+            tasksContainer.style.display = 'block';
+            tasksContainer.classList.remove('removing');
+        }
+
         tasksContainer.innerHTML += `
             <div class="task">
                 <span class="task-name">${newTaskInput.value}</span>
@@ -16,7 +22,7 @@ function addTask() {
             </div>
         `;
 
-        tasksContainer.style.backgroundColor = '#eee';
+
         newTaskInput.value = '';
     }
 
@@ -38,7 +44,7 @@ document.addEventListener('keydown', (event) => {
 //  Делегируем обработчик событий
 
 tasksContainer.addEventListener('click', (event) => {
-    if (event.target.classList.contains('deleteButton')) {
+    if (event.target.classList.contains('deleteButton')) { // обработчик событий для кнопки удаления задачи
         const taskDiv = event.target.closest('.task');
 
         taskDiv.classList.add('removing');
@@ -47,13 +53,17 @@ tasksContainer.addEventListener('click', (event) => {
             taskDiv.remove();
 
             if (tasksContainer.children.length == 0) {
-                tasksContainer.style.backgroundColor = 'transparent';
+                tasksContainer.classList.add('removing');
+
+                tasksContainer.addEventListener('transitioned', () => {
+                    tasksContainer.style.display = 'none';
+                })
             }
         }, { once: true });
 
     }
 
-    if (event.target.classList.contains('task-name')) {
+    if (event.target.classList.contains('task-name')) { // обработчик событий для task-name строки
         event.target.classList.toggle('completed');
     }
 
