@@ -1,9 +1,15 @@
-const newTaskInput = document.querySelector('.newtask-input');
-const newTaskAddButton = document.querySelector('.newtask-add');
+const addTaskInput = document.querySelector('.newtask-input');
+const addTaskButton = document.querySelector('.newtask-add');
+
 const tasksContainer = document.querySelector('.tasks');
 
+const clearAllContainer = document.querySelector('.clear-all_container');
+const clearAll = document.querySelector('.clear-all');
+
+
 function addTask() {
-    if (newTaskInput.value.length === 0) {
+    const value = addTaskInput.value.trim();
+    if (!value) {
         alert('first enter a task');
         return;
     }
@@ -11,63 +17,65 @@ function addTask() {
     else {
 
         if (tasksContainer.children.length == 0) {
-            tasksContainer.style.display = 'block';
             tasksContainer.classList.remove('removing');
+            tasksContainer.style.display = 'block';
+
+            clearAllContainer.classList.remove('removing');
+            clearAllContainer.style.display = "block";
         }
 
         tasksContainer.insertAdjacentHTML('beforeend', `
             <div class="task">
-                <span class="task-name">${newTaskInput.value}</span>
+                <span class="task-name">${addTaskInput.value}</span>
                 <img class="deleteButton" src="images/remove.png" alt="remove task">
             </div>
         `);
 
 
-        newTaskInput.value = '';
+        addTaskInput.value = '';
     }
 
 }
 
 // Вешаем обработчики событий для добавления задачи
 
-newTaskAddButton.addEventListener('click', () => {
+addTaskButton.addEventListener('click', () => {
     addTask();
 })
 
-
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-        addTask();
-    }
+addTaskInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') addTask();
 })
 
-//  Делегируем обработчик событий
+/* Делегируем обработчик событий: 
+    - Для кнопки удаления задачи
+    - Для текста задачи
+ */
 
 tasksContainer.addEventListener('click', (event) => {
     if (event.target.classList.contains('deleteButton')) {
+        const task = event.target.closest('.task');
 
-        const taskDiv = event.target.closest('.task');
-        taskDiv.classList.add('removing');
-        taskDiv.addEventListener('transitionend', onTaskTransitionEnd);
+        task.classList.add('removing');
+        task.addEventListener('transitionend', function onTaskTransitionEnd(event) {
+            if (event.target !== task) return;
+            task.removeEventListener('transitionend', onTaskTransitionEnd);
 
-        function onTaskTransitionEnd(event) {
-            if (event.target !== taskDiv) return;
-            taskDiv.removeEventListener('transitionend', onTaskTransitionEnd);
+            task.remove();
 
-            taskDiv.remove();
-
-            if (tasksContainer.children.length == 0) {
+            if (tasksContainer.children.length === 0) {
                 tasksContainer.classList.add('removing');
-                tasksContainer.addEventListener('transitionend', onContainerTransitionEnd);
+                clearAllContainer.classList.add('removing');
 
-                function onContainerTransitionEnd(e) {
+                tasksContainer.addEventListener('transitionend', function onContainerTransitionEnd(e) {
                     if (e.target !== tasksContainer) return;
-
                     tasksContainer.removeEventListener('transitionend', onContainerTransitionEnd);
+
                     tasksContainer.style.display = 'none';
-                }
+                    clearAllContainer.style.display = 'none';
+                });
             }
-        }
+        });
     }
 
     if (event.target.classList.contains('task-name')) {
@@ -75,3 +83,33 @@ tasksContainer.addEventListener('click', (event) => {
     }
 });
 
+// Обработчик событий для кнопки clearAll
+
+clearAll.addEventListener('click', () => {
+     const currentTasks = [...tasksContainer.children];
+
+     for (const task of currentTasks) {
+        task.classList.add('removing');
+     }
+     clearAllContainer.classList.add('removing');
+
+     const firstTask = currentTasks[0];
+     firstTask.addEventListener('transitionend', function onTaskTransitionEnd(event) {
+        if (event.target !== firstTask) return;
+        firstTask.removeEventListener('transitionend', onTaskTransitionEnd);
+
+        currentTasks.forEach(task => task.remove());
+        clearAllContainer.style.display = 'none';
+        // 
+        tasksContainer.classList.add('removing');
+        tasksContainer.addEventListener('transitionend', function onTasksContainerTransitionEnd(event) {
+            if (event.target !== tasksContainer) return;
+
+            tasksContainer.removeEventListener('transitionend', onTasksContainerTransitionEnd);
+            tasksContainer.remove();
+        });
+
+     })
+
+
+});
