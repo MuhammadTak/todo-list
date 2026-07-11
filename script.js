@@ -6,6 +6,8 @@ const tasksContainer = document.querySelector('.tasks');
 const clearAllContainer = document.querySelector('.clear-all_container');
 const clearAll = document.querySelector('.clear-all');
 
+const noTasksContainer = document.querySelector('.no-tasks_container');
+
 
 function addTask() {
     const value = addTaskInput.value.trim();
@@ -22,12 +24,14 @@ function addTask() {
 
             clearAllContainer.classList.remove('removing');
             clearAllContainer.style.display = "block";
+
+            noTasksContainer.style.display = 'none';
         }
 
         tasksContainer.insertAdjacentHTML('beforeend', `
             <div class="task">
                 <span class="task-name">${addTaskInput.value}</span>
-                <img class="deleteButton" src="images/remove.png" alt="remove task">
+                <img class="deleteButton" src="images/icons/remove.png" alt="remove task">
             </div>
         `);
 
@@ -73,6 +77,7 @@ tasksContainer.addEventListener('click', (event) => {
 
                     tasksContainer.style.display = 'none';
                     clearAllContainer.style.display = 'none';
+                    noTasksContainer.style.display = 'flex';
                 });
             }
         });
@@ -106,10 +111,11 @@ clearAll.addEventListener('click', () => {
             if (event.target !== tasksContainer) return;
 
             tasksContainer.removeEventListener('transitionend', onTasksContainerTransitionEnd);
-            tasksContainer.remove();
+            tasksContainer.style.display = 'none';
+            noTasksContainer.style.display = 'flex';
         });
 
      })
 
-
 });
+

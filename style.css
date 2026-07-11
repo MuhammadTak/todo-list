@@ -44,7 +44,7 @@ body {
     border-radius: 5px;
     width: 40%;
     min-width: 500px;
-    padding: 30px 40px;
+    padding: 20px 30px;
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
     margin-bottom: 10vh;
@@ -168,3 +168,25 @@ body {
         color: var(--gray3);
     }
 }
+
+.no-tasks_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 100px;
+    gap: 15px;
+    transition: all .3s;
+}
+
+.no-tasks_text {
+    font-size: 1.4rem;
+    color: var(--gray1);
+}
+
+.no-tasks_image {
+    width: 60px;
+    filter: invert(1);
+}
+
