@@ -7,6 +7,7 @@
     --gray1: #eee;
     --gray2: #ccc;
     --gray3: #aaa;
+    --border-radius: 6px;
 }
 
 *,
@@ -41,7 +42,7 @@ body {
 .container {
     flex-grow: 2;
     border: 2px solid var(--gray1);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     width: 40%;
     min-width: 500px;
     padding: 20px 30px;
@@ -54,7 +55,7 @@ body {
     position: relative;
     background-color: var(--gray1);
     padding: 20px;
-    border-radius: 10px;
+    border-radius: var(--border-radius);
 }
 
 .newtask-input {
@@ -62,7 +63,7 @@ body {
     height: var(--input-height);
     padding: 10px;
     font-size: 1.2rem;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border: 2px solid transparent;
     transition: .5s;
 
@@ -78,7 +79,7 @@ body {
     font-size: 1.2rem;
     padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     float: right;
     background-color: var(--dark-green1);
     color: var(--gray1);
@@ -95,7 +96,7 @@ body {
     background-color: var(--gray1);
     padding: 30px 20px;
     margin-top: 60px;
-    border-radius: 10px;
+    border-radius: var(--border-radius);
     width: 100%;
     position: relative;
     display: none;
@@ -117,14 +118,13 @@ body {
 
 .removing {
     opacity: 0;
-    /*transform: translateX(-35px);*/
     max-height: 0;
     margin: 0;
     padding: 0;
 }
 
 
-.task>img {
+.task-deleteButton {
     opacity: 0.5;
     max-width: 35px;
     transition: .2s;
@@ -136,18 +136,51 @@ body {
     }
 }
 
-.task-name {
+.checkbox-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.task-checkbox {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  background-color: var(--gray1);
+  border: 2px solid var(--gray3);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.task-checkbox::after {
+  content: '';
+  display: block;
+  opacity: 0;
+  background-image: url(images/icons/galochka-check.svg);
+  width: 25px;
+  height: 25px;
+  background-size: cover;
+  background-position: center;
+  transition: all .2s;
+}
+
+.task-checkbox:checked::after {
+  opacity: 1;
+}
+
+.task-label {
     font-size: 1.2rem;
     cursor: pointer;
     transition: all .3s;
 }
 
-.task-name.completed {
-    text-decoration: line-through;
-    text-decoration-color: var(--gray2);
-    color: var(--gray3);
-    transition: color .3s;
+.task-label.completed {
+  text-decoration: line-through;
+  text-decoration-color: var(--gray2);
+  color: var(--gray3);
+  transition: color .3s;
 }
+
 
 .clear-all_container {
     margin-top: 25px;

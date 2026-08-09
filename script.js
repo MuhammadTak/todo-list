@@ -29,11 +29,14 @@ function addTask() {
     }
 
     tasksContainer.insertAdjacentHTML('beforeend', `
-            <div class="task">
-                <span class="task-name">${addTaskInput.value}</span>
-                <img class="deleteButton" src="images/icons/remove.png" alt="remove task">
-            </div>
-        `);
+      <div class="task">
+        <div class="checkbox-container">
+          <input class="task-checkbox" type="checkbox" id="checkbox${tasksContainer.children.length}">
+          <label class="task-label" for="checkbox${tasksContainer.children.length}">${addTaskInput.value}</label>
+        </div>
+        <img class="task-deleteButton" src="images/icons/remove.png" alt="remove task">
+      </div>
+    `);
 
 
     addTaskInput.value = '';
@@ -42,6 +45,7 @@ function addTask() {
 }
 
 // Вешаем обработчики событий для добавления задачи
+// через кнопку в интерфейсе, и через enter
 
 addTaskButton.addEventListener('click', () => {
   addTask();
@@ -51,21 +55,19 @@ addTaskInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') addTask();
 })
 
-/* Делегируем обработчик событий: 
-    - Для кнопки удаления задачи
-    - Для текста задачи
- */
+// Делегируем обработчик событий для кнопки удаления задачи
 
 tasksContainer.addEventListener('click', (event) => {
-  if (event.target.classList.contains('deleteButton')) {
-    const task = event.target.closest('.task');
 
-    task.classList.add('removing');
-    task.addEventListener('transitionend', function onTaskTransitionEnd(event) {
-      if (event.target !== task) return;
-      task.removeEventListener('transitionend', onTaskTransitionEnd);
+  if (event.target.classList.contains('task-deleteButton')) {
+    const currentTask = event.target.closest('.task');
 
-      task.remove();
+    currentTask.classList.add('removing');
+    currentTask.addEventListener('transitionend', function onTaskTransitionEnd(event) {
+      if (event.target !== currentTask) return;
+      currentTask.removeEventListener('transitionend', onTaskTransitionEnd);
+
+      currentTask.remove();
 
       if (tasksContainer.children.length === 0) {
         tasksContainer.classList.add('removing');
@@ -83,10 +85,18 @@ tasksContainer.addEventListener('click', (event) => {
     });
   }
 
-  if (event.target.classList.contains('task-name')) {
-    event.target.classList.toggle('completed');
-  }
 });
+
+// Делегируем обработчик событий для чекбокса
+
+tasksContainer.addEventListener('change', (event) => {
+  if (!event.target.classList.contains('task-checkbox')) return;
+
+  const currentTask = event.target.closest('.task');
+  const taskLabel = currentTask.querySelector('.task-label');
+
+  taskLabel.classList.toggle('completed', event.target.checked);
+})
 
 // Обработчик событий для кнопки clearAll
 
