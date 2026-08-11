@@ -84,12 +84,11 @@ body {
     float: right;
     background-color: var(--dark-green1);
     color: var(--gray1);
-    transition: .3s;
+    transition: .2s;
     cursor: pointer;
 
     &:hover {
         background-color: var(--dark-green2);
-        scale: 1.03;
     }
 }
 
@@ -126,14 +125,13 @@ body {
 
 
 .task-deleteButton {
-    opacity: 0.5;
+    opacity: 0.4;
     max-width: 35px;
     transition: .2s;
     cursor: pointer;
 
     &:hover {
-        opacity: 1;
-        scale: 1.05;
+        opacity: 0.8;
     }
 }
 
@@ -176,7 +174,6 @@ body {
 
 .task-label {
     font-size: 1.2rem;
-    cursor: pointer;
     transition: all .3s;
 }
 
@@ -185,7 +182,6 @@ body {
   text-decoration-color: var(--gray2);
   color: var(--gray3);
   transition: color .3s;
-  cursor: default;
 }
 
 

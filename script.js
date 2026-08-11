@@ -87,7 +87,19 @@ tasksContainer.addEventListener('click', (event) => {
 
 });
 
-// Делегируем обработчик событий для чекбокса
+// Эмулируем клик по чекбоксу при нажатии на таску
+
+tasksContainer.addEventListener('click', (event) => {
+  const currentTask = event.target.closest('.task');
+  if (!currentTask) return;
+
+  if (event.target === currentTask) {
+    const checkbox = currentTask.querySelector('.task-checkbox');
+    checkbox.click();
+  }
+});
+
+// Делегируем обработчик событий для чекбокса, на его изменение
 
 tasksContainer.addEventListener('change', (event) => {
   if (!event.target.classList.contains('task-checkbox')) return;
@@ -97,6 +109,7 @@ tasksContainer.addEventListener('change', (event) => {
 
   taskLabel.classList.toggle('completed', event.target.checked);
 })
+
 
 // Обработчик событий для кнопки clearAll
 
