@@ -101,6 +101,8 @@ tasksContainer.addEventListener('click', (event) => {
 
 // Делегируем обработчик событий для чекбокса, на его изменение
 
+const taskCheckSound = new Audio('sounds/check-sound3.mp3');
+
 tasksContainer.addEventListener('change', (event) => {
   if (!event.target.classList.contains('task-checkbox')) return;
 
@@ -108,6 +110,11 @@ tasksContainer.addEventListener('change', (event) => {
   const taskLabel = currentTask.querySelector('.task-label');
 
   taskLabel.classList.toggle('completed', event.target.checked);
+
+  if (event.target.checked) {
+    taskCheckSound.currentTime = 0;
+    taskCheckSound.play()
+  }
 })
 
 
